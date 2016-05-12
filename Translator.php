@@ -133,8 +133,7 @@ class Translator extends Object
                 $field = $rule['field'];
                 $value = ArrayHelper::getValue($rule, 'value');
 
-                preg_match('/^Expression((.*))$/',$value,$match);
-                if(isset($match[1])){
+                if(is_string($value) && preg_match('/^Expression((.*))$/',$value,$match) && isset($match[1])){
                     $pattern = $this->_operators[$operator];
                     $where[] = $field . " " . str_replace("?", $match[1], $pattern);
                 }
