@@ -133,19 +133,26 @@ class Translator extends Object
                 $field = $rule['field'];
                 $value = ArrayHelper::getValue($rule, 'value');
 
-                if ($value !== null) {
-                    $i = count($this->_params);
-
-                    if (!is_array($value)) {
-                        $value = [$value];
-                    }
-
-                    foreach ($value as $v) {
-                        $params[":p$i"] = $v;
-                        $i++;
-                    }
+                preg_match('/^Expression((.*))$/',$value,$match);
+                if(isset($match[1])){
+                    $pattern = $this->_operators[$operator];
+                    $where[] = $field . " " . str_replace("?", $match[1], $pattern);
                 }
-                $where[] = $this->encodeRule($field, $operator, $params);
+                else{
+                    if ($value !== null) {
+                        $i = count($this->_params);
+
+                        if (!is_array($value)) {
+                            $value = [$value];
+                        }
+
+                        foreach ($value as $v) {
+                            $params[":p$i"] = $v;
+                            $i++;
+                        }
+                    }
+                    $where[] = $this->encodeRule($field, $operator, $params);
+                }
             }
         }
         return "(" . implode($condition, $where) . ")";

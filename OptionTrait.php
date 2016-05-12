@@ -23,7 +23,7 @@ trait OptionTrait
 
         foreach ($this as $prop => $value)
         {
-            $key = (strpos($prop, "on") !== 0) ? Inflector::underscore($prop) : $prop;
+           $key = $prop;
 
             if ($value instanceof Optionable){
                 $value = $value->toOptions();
